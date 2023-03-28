@@ -48,7 +48,7 @@ download_array_elements() {
 	echo $file_list
 }
 
-export X-Appdome-Client="Bitrise/1.0.0"
+export APPDOME_CLIENT_HEADER="Bitrise/1.0.0"
 app_file=$(download_file $APP_LOCATION)
 
 echo $app_file
