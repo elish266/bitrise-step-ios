@@ -29,7 +29,7 @@ support_url: https://github.com/elish266/bitrise-step-appdome-build/issues
 project_type_tags:
   - ios
 #   - macos
-  - android
+#  - android
 #   - xamarin
 #   - react-native
 #   - cordova
@@ -84,15 +84,6 @@ inputs:
         title: "Team ID"
         is_required: false
         
-    - platform: "Android"
-      opts:
-        title: "Platform"
-        description: "Target device platform (iOS or Android)"
-        value_options:
-        - "Android"
-        - "iOS"
-        is_required: true
-
     - sign_method: "On-Appdome"
       opts:
         title: "Signing Method"
@@ -102,12 +93,6 @@ inputs:
         - "Private-Signing"
         - "Auto-Dev-Signing"
         is_required: true
-        
-    - app_signing_cert: 
-      opts:
-        title: "GooglePlay Signing Fingerprint"
-        description: "Google Play signing SHA-1/SHA256 fingerprint (will be used if provided)"
-        is_required: false
         
     - provisioning_profiles: 
       opts:

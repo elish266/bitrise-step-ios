@@ -21,6 +21,9 @@ set -ex
 #  with a 0 exit code `bitrise` will register your Step as "successful".
 # Any non zero exit code will be registered as "failed" by `bitrise`.
 
+# This is step.sh file for iOS apps
+
+
 download_file() {
 	file_location=$1
 	uri=$(echo $file_location | awk -F "?" '{print $1}')
@@ -45,6 +48,7 @@ download_array_elements() {
 	echo $file_list
 }
 
+export X-Appdome-Client="Bitrise/1.0.0"
 app_file=$(download_file $APP_LOCATION)
 
 echo $app_file
@@ -60,69 +64,20 @@ fi
 git clone https://github.com/Appdome/appdome-api-bash.git
 cd appdome-api-bash
 
-if [ $platform == "Android" ]; then
-	echo "Android platform detected"	
-	gs=""
-	if [[ -n $app_signing_cert ]]; then
-		gs="--google_play_signing ${app_signing_cert}"
-	fi
-	case $sign_method in
-	"Private-Signing")	echo "Private Signing"
-						./appdome_api.sh --api_key $APPDOME_API_KEY \
-							--app ../$app_file \
-							--fusion_set_id $fusion_set_id \
-							$tm \
-							--private_signing \
-							--signing_fingerprint $SIGN_FINGERPRINT \
-							$gs \
-							--output $output \
-							--certificate_output $certificate_output 
-						;;
-	"Auto-Dev-Signing")	echo "Auto Dev Signing"
-						./appdome_api.sh --api_key $APPDOME_API_KEY \
-							--app ../$app_file \
-							--fusion_set_id $fusion_set_id \
-							$tm \
-							--auto_dev_private_signing \
-							--signing_fingerprint $SIGN_FINGERPRINT \
-							$gs \
-							--output $output \
-							--certificate_output $certificate_output 
-						;;
-	"On-Appdome")		echo "On Appdome Signing"
-						keystore_file=$(download_file $BITRISEIO_ANDROID_KEYSTORE_URL)
-						keystore_pass=$BITRISEIO_ANDROID_KEYSTORE_PASSWORD
-						keystore_alias=$BITRISEIO_ANDROID_KEYSTORE_ALIAS
-						key_pass=$BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD
-						./appdome_api.sh --api_key $APPDOME_API_KEY \
-							--app ../$app_file \
-							--fusion_set_id $fusion_set_id \
-							$tm \
-							--sign_on_appdome \
-							--keystore $keystore_file \
-							--keystore_pass $keystore_pass \
-							--keystore_alias $keystore_alias \
-							$gs \
-							--key_pass $key_pass \
-							--output $output \
-							--certificate_output $certificate_output 
-						;;
-	esac
-else
-	echo "iOS platform detected"
-	pf=$(echo $provisioning_profiles)
-	pf_list=$(download_array_elements $pf)
+echo "iOS platform detected"
+pf=$(echo $provisioning_profiles)
+pf_list=$(download_array_elements $pf)
 
-	ef=$(echo $entitlements)
-	ef_list=$(download_array_elements $ef)
-	ls -al
-	en=""
-	if [[ -n $entitlements ]]; then
-		en="--entitlements ${ef_list}"
-	fi
+ef=$(echo $entitlements)
+ef_list=$(download_array_elements $ef)
+ls -al
+en=""
+if [[ -n $entitlements ]]; then
+	en="--entitlements ${ef_list}"
+fi
 
-	case $sign_method in
-	"Private-Signing")	echo "Private Signing"						
+case $sign_method in
+"Private-Signing")		echo "Private Signing"						
 						./appdome_api.sh --api_key $APPDOME_API_KEY \
 							--app ../$app_file \
 							--fusion_set_id $fusion_set_id \
@@ -133,7 +88,7 @@ else
 							--output $output \
 							--certificate_output $certificate_output 
 						;;
-	"Auto-Dev-Signing")	echo "Auto Dev Signing"
+"Auto-Dev-Signing")		echo "Auto Dev Signing"
 						./appdome_api.sh --api_key $APPDOME_API_KEY \
 							--app ../$app_file \
 							--fusion_set_id $fusion_set_id \
@@ -144,7 +99,7 @@ else
 							--output $output \
 							--certificate_output $certificate_output 
 						;;
-	"On-Appdome")		echo "On Appdome Signing"
+"On-Appdome")			echo "On Appdome Signing"
 						keystore_file=$(download_file $BITRISEIO_CERT_URL)
 						keystore_pass=$BITRISEIO_IOS_KEYSTORE_PASSWORD
 						./appdome_api.sh --api_key $APPDOME_API_KEY \
@@ -159,8 +114,8 @@ else
 							--output $output \
 							--certificate_output $certificate_output 
 						;;
-	esac
-fi
+esac
+
 cd ..
 rm -rf appdome-api-bash
 ls -al
