@@ -49,7 +49,7 @@ download_array_elements() {
 }
 
 export APPDOME_CLIENT_HEADER="Bitrise/1.0.0"
-app_file=$(download_file $APP_LOCATION)
+app_file=$(download_file $app_location)
 
 echo $app_file
 
