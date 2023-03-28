@@ -48,6 +48,12 @@ download_array_elements() {
 	echo $file_list
 }
 
+sudo apt-get update && sudo apt-get install --y jq
+
+jq --version
+
+exit 0
+
 export APPDOME_CLIENT_HEADER="Bitrise/1.0.0"
 app_file=$(download_file $app_location)
 
