@@ -94,11 +94,11 @@ inputs:
         - "Auto-Dev-Signing"
         is_required: true
         
-    - provisioning_profiles: 
-      opts:
-        title: "iOS Provisioning Profile(s) EnvVars"
-        description: "iOS Provisioning Profile(s) EnvVars (separated by space)"
-        is_required: false
+   # - provisioning_profiles: 
+#      opts:
+#        title: "iOS Provisioning Profile(s) EnvVars"
+#        description: "iOS Provisioning Profile(s) EnvVars (separated by space)"
+#        is_required: false
         
     - entitlements: 
       opts:
