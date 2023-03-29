@@ -84,8 +84,8 @@ echo "iOS platform detected"
 pf=$(convert_env_var_to_url_list $BITRISE_PROVISION_URL)
 pf_list=$(download_files_from_url_list $pf)
 
-# ef=$(echo $BITRISE_CERTIFICATE_URL)
-# ef_list=$(download_array_elements $ef)
+ef=$(echo $entitlements)
+ef_list=$(download_files_from_url_list $ef)
 # ls -al
 en=""
 if [[ -n $entitlements ]]; then
@@ -117,7 +117,7 @@ case $sign_method in
 						;;
 "On-Appdome")			echo "On Appdome Signing"
 						keystore_file=$(download_file $BITRISE_CERTIFICATE_URL)
-						keystore_pass=$BITRISES_CERTIFICATE_PASSPHRASE
+						keystore_pass=$BITRISE_CERTIFICATE_PASSPHRASE
 						./appdome_api.sh --api_key $APPDOME_API_KEY \
 							--app ../$app_file \
 							--fusion_set_id $fusion_set_id \
