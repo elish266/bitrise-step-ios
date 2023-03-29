@@ -13,9 +13,9 @@ summary: |
   Builds a mobile app using Appdome's platform
 description: |
   Integration that allows activating security and app protection features, bulding and signing mobile apps using Appdome's API.
-website: https://github.com/elish266/bitrise-step-appdome-build
-source_code_url: https://github.com/elish266/bitrise-step-appdome-build
-support_url: https://github.com/elish266/bitrise-step-appdome-build/issues
+website: https://github.com/elish266/bitrise-step-ios
+source_code_url: https://github.com/elish266/bitrise-step-ios
+support_url: https://github.com/elish266/bitrise-step-ios/issues
 
 # If this step should be available only for certain project types
 # just uncomment this `project_type_tags` section and include all the
