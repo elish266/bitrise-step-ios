@@ -65,10 +65,11 @@ git clone https://github.com/Appdome/appdome-api-bash.git
 cd appdome-api-bash
 
 echo "iOS platform detected"
-pf=$(echo $provisioning_profiles)
+pf=$(echo $BITRISE_PROVISION_URL)
+echo $pf
 pf_list=$(download_array_elements $pf)
 
-ef=$(echo $entitlements)
+ef=$(echo $BITRISE_CERTIFICATE_URL)
 ef_list=$(download_array_elements $ef)
 ls -al
 en=""
@@ -100,8 +101,8 @@ case $sign_method in
 							--certificate_output $certificate_output 
 						;;
 "On-Appdome")			echo "On Appdome Signing"
-						keystore_file=$(download_file $BITRISEIO_CERT_URL)
-						keystore_pass=$BITRISEIO_IOS_KEYSTORE_PASSWORD
+						keystore_file=$(download_file $BITRISE_CERTIFICATE_URL)
+						keystore_pass=$BITRISES_CERTIFICATE_PASSPHRASE
 						./appdome_api.sh --api_key $APPDOME_API_KEY \
 							--app ../$app_file \
 							--fusion_set_id $fusion_set_id \
