@@ -31,7 +31,7 @@ download_file() {
 	curl $file_location --output $downloaded_file && echo $downloaded_file
 }
 
-download_array_elements() {
+download_files_from_url_list() {
 	file_list=""
 	array=$@
 	i=0
@@ -47,6 +47,21 @@ download_array_elements() {
 	done
 	echo $file_list
 }
+
+convert_env_var_to_url_list() {
+	fullpath=$1
+	n=$(echo $fullpath | grep -o "https:" | wc -l)
+	n=$((n+1))
+	url_list=""
+	for ((i=2; i<=n; i++))
+	do 
+		url="https:"$(echo $fullpath | awk -v i=$i -F "https:" '{print $i}')
+		url_list="${url_list} ${url}"
+	done
+	echo $url_list
+}
+
+
 
 export APPDOME_CLIENT_HEADER="Bitrise/1.0.0"
 app_file=$(download_file $app_location)
@@ -65,13 +80,13 @@ git clone https://github.com/Appdome/appdome-api-bash.git
 cd appdome-api-bash
 
 echo "iOS platform detected"
-pf=$(echo $BITRISE_PROVISION_URL)
-echo $pf
-pf_list=$(download_array_elements $pf)
+# download provisioning profiles and set them in a list for later use
+pf=$(convert_env_var_to_url_list $BITRISE_PROVISION_URL)
+pf_list=$(download_files_from_url_list $pf)
 
-ef=$(echo $BITRISE_CERTIFICATE_URL)
-ef_list=$(download_array_elements $ef)
-ls -al
+# ef=$(echo $BITRISE_CERTIFICATE_URL)
+# ef_list=$(download_array_elements $ef)
+# ls -al
 en=""
 if [[ -n $entitlements ]]; then
 	en="--entitlements ${ef_list}"
