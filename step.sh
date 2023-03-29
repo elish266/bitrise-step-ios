@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+# set -ex
 
 # echo "This is the value specified for the input 'example_step_input': ${example_step_input}"
 
@@ -62,21 +62,25 @@ convert_env_var_to_url_list() {
 }
 
 
-
 export APPDOME_CLIENT_HEADER="Bitrise/1.0.0"
-app_file=$(download_file $app_location)
+if [[ $app_location == *"http"* ]];
+then
+	app_file=../$(download_file $app_location)
+else
+	app_file=$app_location
+fi
 
-echo $app_file
-
-certificate_output=../certificate.pdf
-output=../Appdome_${app_file}
+mkdir output
+certificate_output=../output/certificate.pdf
+output=../output/Appdome_$(basename $app_file)
 
 tm=""
 if [[ -n $team_id ]]; then
 	tm="--team_id ${team_id}"
 fi
 
-git clone https://github.com/Appdome/appdome-api-bash.git
+
+git clone https://github.com/Appdome/appdome-api-bash.git > /dev/null
 cd appdome-api-bash
 
 echo "iOS platform detected"
@@ -95,7 +99,7 @@ fi
 case $sign_method in
 "Private-Signing")		echo "Private Signing"						
 						./appdome_api.sh --api_key $APPDOME_API_KEY \
-							--app ../$app_file \
+							--app $app_file \
 							--fusion_set_id $fusion_set_id \
 							$tm \
 							--private_signing \
@@ -103,10 +107,11 @@ case $sign_method in
 							$en \
 							--output $output \
 							--certificate_output $certificate_output 
+							
 						;;
 "Auto-Dev-Signing")		echo "Auto Dev Signing"
 						./appdome_api.sh --api_key $APPDOME_API_KEY \
-							--app ../$app_file \
+							--app $app_file \
 							--fusion_set_id $fusion_set_id \
 							$tm \
 							--auto_dev_private_signing \
@@ -114,6 +119,7 @@ case $sign_method in
 							$en \
 							--output $output \
 							--certificate_output $certificate_output 
+							
 						;;
 "On-Appdome")			echo "On Appdome Signing"
 						keystore_file=$(download_file $BITRISE_CERTIFICATE_URL)
@@ -129,10 +135,11 @@ case $sign_method in
 							$en \
 							--output $output \
 							--certificate_output $certificate_output 
+							
 						;;
 esac
 
-cd ..
-rm -rf appdome-api-bash
+cd ../output
+# rm -rf appdome-api-bash
 ls -al
 cp * $BITRISE_DEPLOY_DIR
